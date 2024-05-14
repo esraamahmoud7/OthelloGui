@@ -1,12 +1,13 @@
 import tkinter as tk
-from datetime import time
 from random import choice
 
+from DummyBoard import DummyBoard
 from OthelloBoard import OthelloBoard
 from OthelloState import OthelloGameState
 
 
 class OthelloGame(tk.Frame):
+
     def __init__(self, master=None):
         super().__init__(master)
         self.pack()
@@ -21,7 +22,9 @@ class OthelloGame(tk.Frame):
 
         if self.GameState.human_turn:
             self.handle_human_move(row, col)
+
         else:
+            self.board_gui.remove_valid_effects()
             self.handle_computer_move()
 
     def create_widgets(self):
@@ -52,28 +55,38 @@ class OthelloGame(tk.Frame):
         self.quit()
 
     def handle_human_move(self, row, col):
-        if self.board_gui.board[row][col] != 'B' and self.board_gui.board[row][col] != 'W':
-            print("Invalid move")
-            return
+
+        valid_Moves = self.GameState.Possible_Moves_User()
+        self.board_gui.update_buttons(valid_Moves)
+        # if self.board_gui.board[row][col] != 'B' and self.board_gui.board[row][col] != 'W':
+        #     print("Invalid move")
+        #     return
+        # while (row,col) not in valid_Moves:
+        #     print("Invalid move")
+
         self.board_gui.on_click(row, col, self.GameState.current_player)
         self.GameState.Calculate_Score()
         self.GameState.switch_player()
         self.update_current_player_label()
 
     def handle_computer_move(self):
-        empty_cells = [(i, j) for i in range(8) for j in range(8) if self.board_gui.board[i][j] == '_']
-        if empty_cells:
-            valid_moves = []
+        #Get possible moves
+        # empty_cells = [(i, j) for i in range(8) for j in range(8) if self.board_gui.board[i][j] == '_']
+        # if empty_cells:
+        #     valid_moves = []
 
-            for row, col in empty_cells:
-                if self.is_valid_move(row, col):
-                    valid_moves.append((row, col))
-            if valid_moves:
-                row, col = choice(valid_moves)
-                print(self.GameState.current_player)
-                self.board_gui.on_click(row, col, self.GameState.current_player)
-                self.GameState.Calculate_Score()
-                self.GameState.switch_player()
+            # for row, col in valid_Moves:
+            #     if self.is_valid_move(row, col):
+            #         valid_moves.append((row, col))
+            testBoard = OthelloBoard(self)
+            testBoard.board = [row[:] for row in self.board_gui.board]
+            dummyBoard = DummyBoard(testBoard.board)
+             # return tuple from alpha beta
+            best_move = self.GameState.alpha_beta_Purned(True, dummyBoard, 3, -1000, 1000, True)
+            print(best_move)
+            self.board_gui.on_click(best_move[1][0], best_move[1][1], self.GameState.current_player)
+            self.GameState.Calculate_Score()
+            self.GameState.switch_player()
 
     def is_valid_move(self, row, col):
         if self.board_gui.board[row][col] != '_':
