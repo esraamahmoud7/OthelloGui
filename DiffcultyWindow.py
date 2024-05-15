@@ -9,16 +9,16 @@ class DifficultyWindow(tk.Toplevel):
         self.geometry("450x450")
         # self.controller = controller
 
-        self.label = tk.Label(self, text="\n \n \n \n \n \n \n \nSelect Difficulty:")
+        self.label = tk.Label(self, text="\n \n \n \n \n \n \n \nSelect Difficulty:",font=("Helvetica", 12))
         self.label.pack()
 
-        self.easy_button = tk.Button(self, text="Easy", command=self.set_easy, width=10, bg="#0A5C36", fg="white")
+        self.easy_button = tk.Button(self, text="Easy", command=self.set_easy, width=10, bg="#0A5C36", fg="white",font=("Helvetica", 12))
         self.easy_button.pack(pady=10)
 
-        self.medium_button = tk.Button(self, text="Medium", command=self.set_medium, width=10, bg="#14452F", fg="white")
+        self.medium_button = tk.Button(self, text="Medium", command=self.set_medium, width=10, bg="#14452F", fg="white",font=("Helvetica", 12))
         self.medium_button.pack(pady=10)
 
-        self.hard_button = tk.Button(self, text="Hard", command=self.set_hard, width=10, bg="#18392B", fg="white")
+        self.hard_button = tk.Button(self, text="Hard", command=self.set_hard, width=10, bg="#18392B", fg="white",font=("Helvetica", 12))
         self.hard_button.pack(pady=10)
 
     def set_easy(self):

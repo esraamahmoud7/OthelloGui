@@ -70,7 +70,6 @@ class OthelloBoard(tk.Frame):
         self.update_buttons(moves)
 
 
-
     def create_score_labels(self):
         # Create labels to display scores
         self.black_score_label = tk.Label(self, text="Player: 2", font=("Helvetica", 12))

@@ -1,3 +1,7 @@
+# name: Esraa Mahmoud
+#ID: 20210063
+#section s1,2
+
 import tkinter as tk
 from Controller import OthelloGame
 from DiffcultyWindow import DifficultyWindow
@@ -16,6 +20,7 @@ level = DifficultyWindow(parent=root)
 # Wait for user interaction to set the difficulty
 root.wait_window(level)
 diff = level.diffculty
+
 
 if diff != 0:  # Check if a difficulty level was selected
     start_game(diff)

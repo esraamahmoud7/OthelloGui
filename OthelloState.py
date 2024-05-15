@@ -1,9 +1,4 @@
 
-# from OthelloBoard import OthelloBoard
-import copy
-
-from OthelloBoard import OthelloBoard
-
 
 class OthelloGameState:
     def __init__(self, Board):
@@ -30,27 +25,27 @@ class OthelloGameState:
                     white_Score += 1
         return black_Score, white_Score
 
-    def Possible_Moves_User(self):
+    def Possible_Moves_User(self,board):
         valid_Moves = []
         # Check all possible moves
         for row in range(8):
             for col in range(8):
-                if self.board.board[row][col] == '_':
+                if board[row][col] == '_':
                     # Check if the move is valid
-                    if self.is_valid_move_User(row, col):
+                    if self.is_valid_move_User(row, col,board):
                         valid_Moves.append((row, col))
         return valid_Moves
 
-    def is_valid_move_User(self, row, col):
+    def is_valid_move_User(self, row, col,board):
         flag = False
         AvailDir = [(0, 1), (1, 0), (0, -1), (-1, 0)]
         for dr, dc in AvailDir:
             r, c = row + dr, col + dc
-            while 0 <= r < 8 and 0 <= c < 8 and self.board.board[r][c] != '_' and self.board.board[r][c] != 'B':
+            while 0 <= r < 8 and 0 <= c < 8 and board[r][c] != '_' and board[r][c] != 'B':
                 r, c = r + dr, c + dc
                 flag = True
 
-            if flag and 0 <= r < 8 and 0 <= c < 8 and self.board.board[r][c] == 'B':
+            if flag and 0 <= r < 8 and 0 <= c < 8 and board[r][c] == 'B':
                 return True
             flag = False
 
@@ -74,8 +69,9 @@ class OthelloGameState:
         return Board
 
     def alpha_beta_Purned(self, first, testBoard, depth, alpha, beta, ComputerTurn):
-        if depth == 0 :
-            # when arrive to leaf you need to call unitlity Function and return None for move can't make
+        # if depth = 0 or no more moves can be made for 2 players (Game over) return the utility function
+        if depth == 0 or (self.Possible_Moves_Computer(testBoard) == [] and self.Possible_Moves_User(testBoard) == []):
+            # when arrive to leaf you need to call utility Function and return None for move can't make
             return self.Utility(testBoard), None
         print("Depth: ", depth)
         if ComputerTurn:
@@ -88,6 +84,8 @@ class OthelloGameState:
                     print(str(i) + "|", ' '.join(row))
             # if computer play gave a list for all valid moves can machine make
             validMoves = self.Possible_Moves_Computer(testBoard)
+            if validMoves == []:
+                evaluate, _ = self.alpha_beta_Purned(False, testBoard, depth - 1, alpha, beta, False)
             print(validMoves)
             # init maxVal with negative value at first to start evaluate valid moves
             maxVal = -10000
@@ -108,7 +106,9 @@ class OthelloGameState:
                         break  # when alpha is bigger than betta stop this branch don't continue
             return maxVal, bestMove  # return max and the move
         else:  # every thing we make in alpha do with beta but with min not max
-            validMovs = self.Possible_Moves_User()
+            validMovs = self.Possible_Moves_User(testBoard)
+            if validMovs == []:
+                evaluate, _ = self.alpha_beta_Purned(False, testBoard, depth - 1, alpha, beta, True)
             minVal = 10000
             bestMove = None
             for move in validMovs:

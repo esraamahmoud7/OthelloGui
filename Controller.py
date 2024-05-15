@@ -57,10 +57,9 @@ class OthelloGame(tk.Frame):
             self.winner("End")
             return
 
-        valid_Moves = self.GameState.Possible_Moves_User()
+        valid_Moves = self.GameState.Possible_Moves_User(self.board_gui.board)
 
         if not valid_Moves and self.board_gui.has_white_nodes() and self.count == 0:
-
             self.count += 1
             self.SwitchPlayer(row, col)
             return
@@ -116,22 +115,22 @@ class OthelloGame(tk.Frame):
 
     def winner(self,state):
         BScore, WScore = self.GameState.Calculate_Score()
-        # self.board_gui.destroy()
+        self.board_gui.destroy()
         # self.current_player_label.destroy()
 
         # Destroy the quit button
         # self.quit_button.destroy()
         winner_window = tk.Toplevel(self)
         winner_window.title(state)
-        winner_window.geometry("300x200")
+        winner_window.geometry("300x100")
 
-        winner_label = tk.Label(winner_window, text="End!\n\n")
+        winner_label = tk.Label(winner_window, text="End!\n\n", font=("Helvetica", 12))
         winner_label.pack()
 
         if BScore > WScore:
             winner_label.config(text="Player wins!")
         elif WScore > BScore:
-            winner_label.config(text="AI wins!")
+            winner_label.config(text="AI wins! \n his score is: "+str(WScore)+"\n your score is: "+str(BScore))
         else:
             winner_label.config(text="It's a draw!")
 
@@ -139,22 +138,4 @@ class OthelloGame(tk.Frame):
         close_button = tk.Button(winner_window, text="Close", command=winner_window.destroy)
         close_button.pack()
 
-        # def SwitchPlayer(self, row, col):
-            #     if self.GameState.human_turn:
-            #         if self.board_gui.board[row][col] != 'B' and self.board_gui.board[row][col] != 'W':
-            #             #get valid move
-            #             self.board_gui.update_Board(row, col, self.GameState.current_player)
-            #             #self.board_gui.print_Board(self.GameState.current_player)
-            #             self.GameState.Calculate_Score()
-            #             self.GameState.switch_player()
-            #
-            #         else:
-            #             print("Invalid move")
-            #     else:
-            #         empty_cells = [(i, j) for i in range(8) for j in range(8) if self.board_gui.board[i][j] != 'B' and self.board_gui.board[i][j] != 'W']
-            #         if empty_cells:
-            #             row, col = choice(empty_cells)
-            #             self.board_gui.update_Board(row, col, self.GameState.current_player)
-            #             #self.board_gui.print_Board(self.GameState.current_player)
-            #             self.GameState.Calculate_Score()
-            #             self.GameState.switch_player()
+
